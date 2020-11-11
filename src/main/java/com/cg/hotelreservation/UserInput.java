@@ -119,9 +119,9 @@ public class UserInput {
             localDate = convertToLocalDateViaSqlDate(count).plusDays(1);
             count=convertToDateViaSqlDate(localDate);
         }
-        int bridgewood_rates=bridgewoodRatesday(weekdays,weekend);
-        int lakewood_rates=lakewoodRatesday(weekdays,weekend);
-        int ridgewood_rates=ridgewoodRatesday(weekdays,weekend);
+        int bridgewood_rates=bridgewoodRatesday(false,weekdays,weekend);
+        int lakewood_rates=lakewoodRatesday(false,weekdays,weekend);
+        int ridgewood_rates=ridgewoodRatesday(false,weekdays,weekend);
         String[] output = new String[3];
         if(ridgewood_rates<=bridgewood_rates&&ridgewood_rates<=bridgewood_rates){
             output[0] = "Ridgewood";
@@ -144,15 +144,23 @@ public class UserInput {
         }
     }
 
-    public int lakewoodRatesday(int weekdays,int weekends){
-        return weekdays*lakewood.weekdayReg+weekends*lakewood.weekendReg;
+    public int lakewoodRatesday(boolean isRewards,int weekdays,int weekends){
+        if(isRewards)
+            return weekdays*lakewood.weekdayReg+weekends*lakewood.weekendReg;
+        else
+            return weekdays*lakewood.weekdayRew+weekends*lakewood.weekendRew;
     }
-    public int bridgewoodRatesday(int weekdays,int weekends){
-        return weekdays*bridgewood.weekdayReg+weekends*bridgewood.weekendReg;
+    public int bridgewoodRatesday(boolean isRewards,int weekdays,int weekends){
+        if(isRewards)
+            return weekdays*bridgewood.weekdayRew+weekends*bridgewood.weekendRew;
+        else
+            return weekdays*bridgewood.weekdayReg+weekends*bridgewood.weekendReg;
     }
-    public int ridgewoodRatesday(int weekdays,int weekends){
-
-        return weekdays*ridgewood.weekdayReg+weekends*ridgewood.weekendReg;
+    public int ridgewoodRatesday(boolean isRewards,int weekdays,int weekends){
+        if(isRewards)
+            return weekdays*ridgewood.weekdayRew+weekends*ridgewood.weekendRew;
+        else
+            return weekdays*ridgewood.weekdayReg+weekends*ridgewood.weekendReg;
     }
 
     public String[] highestRatedHotel(Date start, Date end){
@@ -175,19 +183,60 @@ public class UserInput {
         if(ridgewood.getRating()>bridgewood.getRating()&&ridgewood.getRating()>lakewood.getRating()){
             output[0] = "Ridgewood";
             output[1]=String.valueOf(ridgewood.rating);
-            output[2]=String.valueOf(ridgewoodRatesday(weekdays,weekend));
+            output[2]=String.valueOf(ridgewoodRatesday(false,weekdays,weekend));
             return output;
         }
         else if(bridgewood.getRating()>lakewood.getRating()&&bridgewood.getRating()>ridgewood.getRating()) {
             output[0] = "Bridgewood";
             output[1]=String.valueOf(bridgewood.rating);
-            output[2]=String.valueOf(bridgewoodRatesday(weekdays,weekend));
+            output[2]=String.valueOf(bridgewoodRatesday(false,weekdays,weekend));
             return output;
         }
         else {
             output[0] = "Lakewood";
             output[1]=String.valueOf(lakewood.rating);
-            output[2]=String.valueOf(lakewoodRatesday(weekdays,weekend));
+            output[2]=String.valueOf(lakewoodRatesday(false,weekdays,weekend));
+            return output;
+        }
+    }
+
+    //UC10 Best Rated Cheapest Hotel for Rewards Member
+    public String[] lowestRateRewardsWeekdays(Date start, Date end){
+        int weekdays=0,weekend=0;
+        Date count=start;
+        LocalDate localDate;
+        long difference = end.getTime()-start.getTime();
+        int numOfDays = (int) Math.floor(difference/(3600*24*1000));
+        for(int i=0;i<numOfDays;i++){
+            if(count.getDay()==6||count.getDay()==0){
+                weekend++;
+            }
+            else
+                weekdays++;
+            localDate = convertToLocalDateViaSqlDate(count).plusDays(1);
+            count=convertToDateViaSqlDate(localDate);
+        }
+        int bridgewood_rates=bridgewoodRatesday(true,weekdays,weekend);
+        int lakewood_rates=lakewoodRatesday(true,weekdays,weekend);
+        int ridgewood_rates=ridgewoodRatesday(true,weekdays,weekend);
+        String[] output = new String[3];
+        if(ridgewood_rates<=bridgewood_rates&&ridgewood_rates<=bridgewood_rates){
+            output[0] = "Ridgewood";
+            output[1]=String.valueOf(ridgewood.rating);
+            output[2]=String.valueOf(ridgewood_rates);
+            return output;
+
+        }
+        else if(bridgewood_rates<=lakewood_rates&&bridgewood_rates<=ridgewood_rates) {
+            output[0] = "Bridgewood";
+            output[1]=String.valueOf(bridgewood.rating);
+            output[2]=String.valueOf(bridgewood_rates);
+            return output;
+        }
+        else {
+            output[0] = "Lakewood";
+            output[1]=String.valueOf(lakewood.rating);
+            output[2]=String.valueOf(lakewood_rates);
             return output;
         }
     }
