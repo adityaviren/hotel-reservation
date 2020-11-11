@@ -14,6 +14,8 @@ public class UserInput {
     Scanner scanner = new Scanner(System.in);
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMMyyyy");
 
+    
+
     public static void main(String[] args) {
         System.out.println("WELCOME TO HOTEL RESERVATION PROGRAM");
         UserInput userInput = new UserInput();
@@ -98,5 +100,46 @@ public class UserInput {
         } catch (ParseException e) {
             return null;
         }
+    }
+
+    //UC4 MinimumRates according to days
+    public int lowestRateWeekdays(Date start, Date end){
+        int weekdays=0,weekend=0;
+        Date count=start;
+        LocalDate localDate;
+        long difference = end.getTime()-start.getTime();
+        int numOfDays = (int) Math.floor(difference/(3600*24*1000));
+        for(int i=0;i<numOfDays;i++){
+            if(count.getDay()==6||count.getTime()==5){
+                weekend++;
+            }
+            else
+                weekdays++;
+            localDate = convertToLocalDateViaSqlDate(count).plusDays(1);
+            count=convertToDateViaSqlDate(localDate);
+        }
+        int bridgewood_rates=bridgewoodRatesday(weekdays,weekend);
+        int lakewood_rates=lakewoodRatesday(weekdays,weekend);
+        int ridgewood_rates=ridgewoodRatesday(weekdays,weekend);
+        if(lakewood_rates<=bridgewood_rates&&lakewood_rates<=ridgewood_rates){
+            return lakewood_rates;
+        }
+        else if(bridgewood_rates<=lakewood_rates&&bridgewood_rates<=ridgewood_rates)
+            return bridgewood_rates;
+        else
+            return ridgewood_rates;
+    }
+
+    public int lakewoodRatesday(int weekdays,int weekends){
+        Lakewood lakewood=new Lakewood();
+        return weekdays*lakewood.weekdayReg+weekends*lakewood.weekendReg;
+    }
+    public int bridgewoodRatesday(int weekdays,int weekends){
+        Bridgewood bridgewood = new Bridgewood();
+        return weekdays*bridgewood.weekdayReg+weekends*bridgewood.weekendReg;
+    }
+    public int ridgewoodRatesday(int weekdays,int weekends){
+        Ridgewood ridgewood = new Ridgewood();
+        return weekdays*ridgewood.weekdayReg+weekends*ridgewood.weekendReg;
     }
 }

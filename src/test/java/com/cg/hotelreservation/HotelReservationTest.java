@@ -18,4 +18,12 @@ public class HotelReservationTest {
         Assert.assertEquals(220,minRate);
     }
 
+    @Test
+    public void givenRange_shouldReturnLowestRate_accordingToWeekdays() {
+        UserInput userInput = new UserInput();
+        Date start = userInput.returnStartDate("11sep2020");
+        Date end = userInput.returnEndDate("12sep2020");
+        int minRate = userInput.lowestRateWeekdays(start,end);
+        Assert.assertEquals(200,minRate);
+    }
 }

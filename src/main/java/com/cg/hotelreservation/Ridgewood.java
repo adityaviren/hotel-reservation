@@ -1,11 +1,11 @@
 package com.cg.hotelreservation;
 
 public class Ridgewood {
-    public int rating;
-    public int weekdayReg;
-    public int weekendReg;
-    public int weekdayRew;
-    public int weekendRew;
+    public int rating=5;
+    public int weekdayReg=220;
+    public int weekendReg=150;
+    public int weekdayRew=100;
+    public int weekendRew=40;
 
     public int getRating() {
         return rating;
