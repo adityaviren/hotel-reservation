@@ -14,7 +14,8 @@ public class HotelReservationTest {
         UserInput userInput = new UserInput();
         Date start = userInput.returnStartDate("12sep2020");
         Date end = userInput.returnEndDate("13sep2020");
-        int minRate = userInput.uc1(start,end);
+        int minRate = userInput.lowestRateSimple(start,end);
         Assert.assertEquals(220,minRate);
     }
+
 }

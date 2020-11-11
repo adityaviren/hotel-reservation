@@ -19,7 +19,7 @@ public class UserInput {
         UserInput userInput = new UserInput();
         Date[] dateArray=new Date[2];
         dateArray = userInput.input();
-        userInput.uc1(dateArray[0],dateArray[1]);
+        userInput.lowestRateSimple(dateArray[0],dateArray[1]);
     }
 
     public Date[] input(){
@@ -44,7 +44,7 @@ public class UserInput {
     }
 
     //UC1 basic rates
-    public int uc1(Date start, Date end){
+    public int lowestRateSimple(Date start, Date end){
         long difference = end.getTime()-start.getTime();
         int numOfDays = (int) Math.floor(difference/(3600*24*1000));
         int bridgewood_rates=bridgewoodRates(numOfDays);
