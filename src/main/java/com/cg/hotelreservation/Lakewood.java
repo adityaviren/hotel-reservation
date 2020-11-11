@@ -46,4 +46,10 @@ public class Lakewood {
     public void setWeekendRew(int weekendRew) {
         this.weekendRew = weekendRew;
     }
+
+    Lakewood(int rating,int weekdayReg,int weekendReg){
+        this.rating=rating;
+        this.weekendReg=weekendReg;
+        this.weekdayReg=weekdayReg;
+    }
 }

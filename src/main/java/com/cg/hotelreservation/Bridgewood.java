@@ -46,4 +46,10 @@ public class Bridgewood {
     public void setWeekendRew(int weekendRew) {
         this.weekendRew = weekendRew;
     }
+
+    Bridgewood(int rating,int weekdayReg,int weekendReg){
+        this.rating=rating;
+        this.weekendReg=weekendReg;
+        this.weekdayReg=weekdayReg;
+    }
 }
