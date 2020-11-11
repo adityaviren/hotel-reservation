@@ -1,11 +1,11 @@
 package com.cg.hotelreservation;
 
 public class Lakewood {
-    public int rating=3;
-    public int weekdayReg=110;
-    public int weekendReg=90;
-    public int weekdayRew=80;
-    public int weekendRew=80;
+    public int rating;
+    public int weekdayReg;
+    public int weekendReg;
+    public int weekdayRew;
+    public int weekendRew;
 
     public int getRating() {
         return rating;
@@ -47,9 +47,11 @@ public class Lakewood {
         this.weekendRew = weekendRew;
     }
 
-    Lakewood(int rating,int weekdayReg,int weekendReg){
+    Lakewood(int rating,int weekdayReg,int weekendReg,int weekdayRew,int weekendRew){
         this.rating=rating;
         this.weekendReg=weekendReg;
         this.weekdayReg=weekdayReg;
+        this.weekdayRew=weekdayRew;
+        this.weekendRew=weekendRew;
     }
 }

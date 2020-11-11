@@ -13,11 +13,11 @@ public class UserInput {
     Scanner scanner = new Scanner(System.in);
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMMyyyy");
 
-    Lakewood lakewood=new Lakewood(3,110,90);
+    Lakewood lakewood=new Lakewood(3,110,90,80,80);
 
-    Bridgewood bridgewood = new Bridgewood(4,160,60);
+    Bridgewood bridgewood = new Bridgewood(4,160,60,110,50);
 
-    Ridgewood ridgewood = new Ridgewood(5,220,150);
+    Ridgewood ridgewood = new Ridgewood(5,220,150,100,40);
 
     public static void main(String[] args) {
         System.out.println("WELCOME TO HOTEL RESERVATION PROGRAM");
