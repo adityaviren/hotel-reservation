@@ -45,4 +45,17 @@ public class HotelReservationTest {
         System.out.println(output[0] + ",Rating :" + output[1] + " and Total Rates = $" + output[2]);
         Assert.assertEquals(output[1],"4");
     }
+
+    @Test
+    public void GivenRange_shouldReturnHighestRatedHotelAndRate() {
+        UserInput userInput = new UserInput();
+        Date start = userInput.returnStartDate("11sep2020");
+        Date end = userInput.returnEndDate("12sep2020");
+        String[] output = userInput.highestRatedHotel(start,end);
+        System.out.println(output);
+        System.out.println(output[0] + ",Rating :" + output[1] + " and Total Rates = $" + output[2]);
+        Assert.assertEquals(output[1],"5");
+        Assert.assertEquals(output[0],"Ridgewood");
+        Assert.assertEquals(output[2],"370");
+    }
 }

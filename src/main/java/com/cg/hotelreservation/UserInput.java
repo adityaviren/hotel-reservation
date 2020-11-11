@@ -154,4 +154,41 @@ public class UserInput {
 
         return weekdays*ridgewood.weekdayReg+weekends*ridgewood.weekendReg;
     }
+
+    public String[] highestRatedHotel(Date start, Date end){
+        int weekdays=0,weekend=0;
+        Date count=start;
+        LocalDate localDate;
+        long difference = end.getTime()-start.getTime();
+        int numOfDays = (int) Math.floor(difference/(3600*24*1000));
+        for(int i=0;i<numOfDays;i++){
+            if(count.getDay()==6||count.getDay()==0){
+                weekend++;
+            }
+            else
+                weekdays++;
+            localDate = convertToLocalDateViaSqlDate(count).plusDays(1);
+            count=convertToDateViaSqlDate(localDate);
+        }
+
+        String[] output=new String[3];
+        if(ridgewood.getRating()>bridgewood.getRating()&&ridgewood.getRating()>lakewood.getRating()){
+            output[0] = "Ridgewood";
+            output[1]=String.valueOf(ridgewood.rating);
+            output[2]=String.valueOf(ridgewoodRatesday(weekdays,weekend));
+            return output;
+        }
+        else if(bridgewood.getRating()>lakewood.getRating()&&bridgewood.getRating()>ridgewood.getRating()) {
+            output[0] = "Bridgewood";
+            output[1]=String.valueOf(bridgewood.rating);
+            output[2]=String.valueOf(bridgewoodRatesday(weekdays,weekend));
+            return output;
+        }
+        else {
+            output[0] = "Lakewood";
+            output[1]=String.valueOf(lakewood.rating);
+            output[2]=String.valueOf(lakewoodRatesday(weekdays,weekend));
+            return output;
+        }
+    }
 }
