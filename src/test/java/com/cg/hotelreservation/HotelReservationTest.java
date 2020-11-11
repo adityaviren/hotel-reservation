@@ -10,8 +10,8 @@ public class HotelReservationTest {
     @Test
     public void GivenIncorrectDate_shouldAskAgain() {
         UserInput userInput = new UserInput();
-        Date start = userInput.returnStartDate("12092020");
-        Date end = userInput.returnEndDate("13092020");
+        Date start = userInput.returnStartDate("12-09-2020");
+        Date end = userInput.returnEndDate("13-09-2020");
         Assert.assertEquals(null,start);
         Assert.assertEquals(null,end);
     }
@@ -30,7 +30,19 @@ public class HotelReservationTest {
         UserInput userInput = new UserInput();
         Date start = userInput.returnStartDate("11sep2020");
         Date end = userInput.returnEndDate("12sep2020");
-        int minRate = userInput.lowestRateWeekdays(start,end);
+        String[] output = userInput.lowestRateWeekdays(start,end);
+        System.out.println(output[0] + ",Rating :" + output[1] + " and Total Rates = $" + output[2]);
+        int minRate = Integer.parseInt(output[2]);
         Assert.assertEquals(200,minRate);
+    }
+
+    @Test
+    public void givenRange_shouldReturnLowestRate_accordingToRatings() {
+        UserInput userInput = new UserInput();
+        Date start = userInput.returnStartDate("11sep2020");
+        Date end = userInput.returnEndDate("12sep2020");
+        String[] output = userInput.lowestRateWeekdays(start,end);
+        System.out.println(output[0] + ",Rating :" + output[1] + " and Total Rates = $" + output[2]);
+        Assert.assertEquals(output[1],"4");
     }
 }

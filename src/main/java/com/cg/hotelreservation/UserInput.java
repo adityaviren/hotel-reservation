@@ -3,11 +3,10 @@ package com.cg.hotelreservation;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Scanner;
 
-import static java.time.temporal.ChronoUnit.DAYS;
+
 
 public class UserInput {
 
@@ -104,7 +103,8 @@ public class UserInput {
     }
 
     //UC4 MinimumRates according to days
-    public int lowestRateWeekdays(Date start, Date end){
+    //UC6 minimumRates with better rating
+    public String[] lowestRateWeekdays(Date start, Date end){
         int weekdays=0,weekend=0;
         Date count=start;
         LocalDate localDate;
@@ -122,13 +122,26 @@ public class UserInput {
         int bridgewood_rates=bridgewoodRatesday(weekdays,weekend);
         int lakewood_rates=lakewoodRatesday(weekdays,weekend);
         int ridgewood_rates=ridgewoodRatesday(weekdays,weekend);
-        if(lakewood_rates<=bridgewood_rates&&lakewood_rates<=ridgewood_rates){
-            return lakewood_rates;
+        String[] output = new String[3];
+        if(ridgewood_rates<=bridgewood_rates&&ridgewood_rates<=bridgewood_rates){
+            output[0] = "Ridgewood";
+            output[1]=String.valueOf(ridgewood.rating);
+            output[2]=String.valueOf(ridgewood_rates);
+            return output;
+
         }
-        else if(bridgewood_rates<=lakewood_rates&&bridgewood_rates<=ridgewood_rates)
-            return bridgewood_rates;
-        else
-            return ridgewood_rates;
+        else if(bridgewood_rates<=lakewood_rates&&bridgewood_rates<=ridgewood_rates) {
+            output[0] = "Bridgewood";
+            output[1]=String.valueOf(bridgewood.rating);
+            output[2]=String.valueOf(bridgewood_rates);
+            return output;
+        }
+        else {
+            output[0] = "Lakewood";
+            output[1]=String.valueOf(lakewood.rating);
+            output[2]=String.valueOf(lakewood_rates);
+            return output;
+        }
     }
 
     public int lakewoodRatesday(int weekdays,int weekends){
