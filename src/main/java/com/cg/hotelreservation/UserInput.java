@@ -3,10 +3,7 @@ package com.cg.hotelreservation;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -127,7 +124,7 @@ public class UserInput {
         int hotel3_rates=hotel3Ratesday(false,weekdays,weekend);
         System.out.println(hotel1_rates+" " + hotel2_rates+" "+hotel3_rates);
         String[] output = new String[3];
-        if(hotel3_rates<=hotel2_rates&&hotel3_rates<=hotel2_rates){
+        if(hotel3_rates<=hotel2_rates&&hotel3_rates<=hotel1_rates){
             output[0] = "Ridgewood";
             output[1]=String.valueOf(hotel3.rating);
             output[2]=String.valueOf(hotel3_rates);
@@ -203,7 +200,7 @@ public class UserInput {
         int hotel1_rates=hotel1Ratesday(true,weekdays,weekend);
         int hotel3_rates=hotel3Ratesday(true,weekdays,weekend);
         String[] output = new String[3];
-        if(hotel3_rates<=hotel2_rates&&hotel3_rates<=hotel2_rates){
+        if(hotel3_rates<=hotel2_rates&&hotel3_rates<=hotel1_rates){
             output[0] = "Ridgewood";
             output[1]=String.valueOf(hotel3.rating);
             output[2]=String.valueOf(hotel3_rates);
@@ -229,9 +226,9 @@ public class UserInput {
 
         int weekdays = days[0];
         int weekend = days[1];
-        hotelArrayList.stream().forEach(hotel -> hotel.setRates(true, weekdays, weekend));
+        hotelArrayList.forEach(hotel -> hotel.setRates(true, weekdays, weekend));
 
-        List<Hotel> list = hotelArrayList.stream().sorted((c1, c2)->Integer.compare(c1.getRates(), c2.getRates()))
+        List<Hotel> list = hotelArrayList.stream().sorted(Comparator.comparingInt(Hotel::getRates))
                 .collect(Collectors.toList());
         int min = list.get(0).getRates();
         list = list.stream().filter(hotel -> hotel.getRates()==min)
@@ -270,7 +267,7 @@ public class UserInput {
         int weekend = days[1];
         hotelArrayList.stream().forEach(hotel -> hotel.setRates(false, weekdays, weekend));
 
-        List<Hotel> list = hotelArrayList.stream().sorted((c1, c2)->Integer.compare(c1.getRates(), c2.getRates()))
+        List<Hotel> list = hotelArrayList.stream().sorted(Comparator.comparingInt(Hotel::getRates))
                 .collect(Collectors.toList());
         System.out.println(list);
         int min = list.get(0).getRates();
