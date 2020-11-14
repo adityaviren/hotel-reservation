@@ -1,11 +1,36 @@
 package com.cg.hotelreservation;
 
-public class Bridgewood {
+public class Hotel {
+    protected String name;
     public int rating;
     public int weekdayReg;
     public int weekendReg;
     public int weekdayRew;
     public int weekendRew;
+    public int rates;
+
+    public int getRates() {
+        return rates;
+    }
+
+    public void setRates(int rates) {
+        this.rates = rates;
+    }
+
+    public void setRates(boolean isRewards,int weekdays,int weekends){
+        if(isRewards)
+            rates =  weekdays*weekdayRew+weekends*weekendRew;
+        else
+            rates = weekdays*weekdayReg+weekends*weekendReg;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getRating() {
         return rating;
@@ -47,11 +72,17 @@ public class Bridgewood {
         this.weekendRew = weekendRew;
     }
 
-    Bridgewood(int rating,int weekdayReg,int weekendReg,int weekdayRew,int weekendRew){
+    Hotel(String name,int rating,int weekdayReg,int weekendReg,int weekdayRew,int weekendRew){
+        this.name=name;
         this.rating=rating;
         this.weekendReg=weekendReg;
         this.weekdayReg=weekdayReg;
         this.weekdayRew=weekdayRew;
         this.weekendRew=weekendRew;
     }
+
+    public String toString(){
+        return name + " " + rating + " " + rates + " ";
+    }
 }
+
