@@ -43,7 +43,7 @@ public class HotelReservationTest {
         Date end = userInput.returnEndDate("12sep2020");
         String[] output = userInput.lowestRateWeekdays(start,end);
         System.out.println(output[0] + ",Rating :" + output[1] + " and Total Rates = $" + output[2]);
-        Assert.assertEquals(output[1],"4");
+        Assert.assertEquals(output[1],"3");
     }
 
     @Test
@@ -68,5 +68,15 @@ public class HotelReservationTest {
         Assert.assertEquals(output[1],"5");
         Assert.assertEquals(output[0],"Ridgewood");
         Assert.assertEquals(output[2],"140");
+    }
+
+    @Test
+    public void givenRange_shouldReturnHotel() {
+        UserInput userInput = new UserInput();
+        Date start = userInput.returnStartDate("11sep2020");
+        Date end = userInput.returnEndDate("12sep2020");
+        userInput.addHotel();
+        Hotel hotel = userInput.cheapestHotelHighestRatingRewards(start,end);
+        Assert.assertEquals("Ridgewood",hotel.getName());
     }
 }

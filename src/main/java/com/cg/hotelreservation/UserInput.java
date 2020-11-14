@@ -3,9 +3,11 @@ package com.cg.hotelreservation;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
-
+import java.util.stream.Collectors;
 
 
 public class UserInput {
@@ -13,17 +15,25 @@ public class UserInput {
     Scanner scanner = new Scanner(System.in);
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMMyyyy");
 
-    Lakewood lakewood=new Lakewood(3,110,90,80,80);
+    Hotel hotel1 = new Hotel("Lakewood",3,110,90,80,80);
 
-    Bridgewood bridgewood = new Bridgewood(4,160,60,110,50);
+    Hotel hotel2 = new Hotel("Bridgewood",4,160,60,110,50);
 
-    Ridgewood ridgewood = new Ridgewood(5,220,150,100,40);
+    Hotel hotel3 = new Hotel("Ridgewood",5,220,150,100,40);
+
+    public ArrayList<Hotel> hotelArrayList = new ArrayList<>();
 
     public static void main(String[] args) {
         System.out.println("WELCOME TO HOTEL RESERVATION PROGRAM");
         UserInput userInput = new UserInput();
         Date[] dateArray= userInput.input();
         userInput.lowestRateSimple(dateArray[0],dateArray[1]);
+    }
+
+    public void addHotel(){
+        hotelArrayList.add(hotel1);
+        hotelArrayList.add(hotel2);
+        hotelArrayList.add(hotel3);
     }
 
     public Date[] input(){
@@ -51,27 +61,27 @@ public class UserInput {
     public int lowestRateSimple(Date start, Date end){
         long difference = end.getTime()-start.getTime();
         int numOfDays = (int) Math.floor(difference/(3600*24*1000));
-        int bridgewood_rates=bridgewoodRates(numOfDays);
-        int lakewood_rates=lakewoodRates(numOfDays);
-        int ridgewood_rates=ridgewoodRates(numOfDays);
-        if(lakewood_rates<bridgewood_rates&&lakewood_rates<ridgewood_rates){
-            return lakewood_rates;
+        int hotel2_rates=hotel2Rates(numOfDays);
+        int hotel1_rates=hotel1Rates(numOfDays);
+        int hotel3_rates=hotel3Rates(numOfDays);
+        if(hotel1_rates<hotel2_rates&&hotel1_rates<hotel3_rates){
+            return hotel1_rates;
         }
-        else if(bridgewood_rates<lakewood_rates&&bridgewood_rates<ridgewood_rates)
-            return bridgewood_rates;
+        else if(hotel2_rates<hotel1_rates&&hotel2_rates<hotel3_rates)
+            return hotel2_rates;
         else
-            return ridgewood_rates;
+            return hotel3_rates;
     }
 
-    public int lakewoodRates(int numOfDays){
-        return numOfDays*lakewood.weekdayReg;
+    public int hotel1Rates(int numOfDays){
+        return numOfDays*hotel1.weekdayReg;
     }
-    public int bridgewoodRates(int numOfDays){
+    public int hotel2Rates(int numOfDays){
 
-        return numOfDays*bridgewood.weekdayReg;
+        return numOfDays*hotel2.weekdayReg;
     }
-    public int ridgewoodRates(int numOfDays){
-        return numOfDays*ridgewood.weekdayReg;
+    public int hotel3Rates(int numOfDays){
+        return numOfDays*hotel3.weekdayReg;
     }
 
     public LocalDate convertToLocalDateViaSqlDate(Date dateToConvert) {
@@ -86,6 +96,7 @@ public class UserInput {
         try {
             return simpleDateFormat.parse(start);
         } catch (ParseException e) {
+            System.out.println("Invalid Date");
             return null;
         }
     }
@@ -98,6 +109,7 @@ public class UserInput {
             date=convertToDateViaSqlDate(localDate);
             return date;
         } catch (ParseException e) {
+            System.out.println("Invalid Date");
             return null;
         }
     }
@@ -105,103 +117,134 @@ public class UserInput {
     //UC4 MinimumRates according to days
     //UC6 minimumRates with better rating
     public String[] lowestRateWeekdays(Date start, Date end){
-        int weekdays=0,weekend=0;
-        Date count=start;
-        LocalDate localDate;
-        long difference = end.getTime()-start.getTime();
-        int numOfDays = (int) Math.floor(difference/(3600*24*1000));
-        for(int i=0;i<numOfDays;i++){
-            if(count.getDay()==6||count.getDay()==0){
-                weekend++;
-            }
-            else
-                weekdays++;
-            localDate = convertToLocalDateViaSqlDate(count).plusDays(1);
-            count=convertToDateViaSqlDate(localDate);
-        }
-        int bridgewood_rates=bridgewoodRatesday(false,weekdays,weekend);
-        int lakewood_rates=lakewoodRatesday(false,weekdays,weekend);
-        int ridgewood_rates=ridgewoodRatesday(false,weekdays,weekend);
+        int[] days = getDays(start,end);
+
+        int weekdays = days[0];
+        int weekend = days[1];
+
+        int hotel2_rates=hotel2Ratesday(false,weekdays,weekend);
+        int hotel1_rates=hotel1Ratesday(false,weekdays,weekend);
+        int hotel3_rates=hotel3Ratesday(false,weekdays,weekend);
+        System.out.println(hotel1_rates+" " + hotel2_rates+" "+hotel3_rates);
         String[] output = new String[3];
-        if(ridgewood_rates<=bridgewood_rates&&ridgewood_rates<=bridgewood_rates){
+        if(hotel3_rates<=hotel2_rates&&hotel3_rates<=hotel2_rates){
             output[0] = "Ridgewood";
-            output[1]=String.valueOf(ridgewood.rating);
-            output[2]=String.valueOf(ridgewood_rates);
+            output[1]=String.valueOf(hotel3.rating);
+            output[2]=String.valueOf(hotel3_rates);
             return output;
 
         }
-        else if(bridgewood_rates<=lakewood_rates&&bridgewood_rates<=ridgewood_rates) {
+        else if(hotel2_rates<=hotel1_rates&&hotel2_rates<=hotel3_rates) {
             output[0] = "Bridgewood";
-            output[1]=String.valueOf(bridgewood.rating);
-            output[2]=String.valueOf(bridgewood_rates);
+            output[1]=String.valueOf(hotel2.rating);
+            output[2]=String.valueOf(hotel2_rates);
             return output;
         }
         else {
             output[0] = "Lakewood";
-            output[1]=String.valueOf(lakewood.rating);
-            output[2]=String.valueOf(lakewood_rates);
+            output[1]=String.valueOf(hotel1.rating);
+            output[2]=String.valueOf(hotel1_rates);
             return output;
         }
     }
 
-    public int lakewoodRatesday(boolean isRewards,int weekdays,int weekends){
+    public int hotel1Ratesday(boolean isRewards,int weekdays,int weekends){
         if(isRewards)
-            return weekdays*lakewood.weekdayReg+weekends*lakewood.weekendReg;
+            return weekdays*hotel1.weekdayRew+weekends*hotel1.weekendRew;
         else
-            return weekdays*lakewood.weekdayRew+weekends*lakewood.weekendRew;
+            return weekdays*hotel1.weekdayReg+weekends*hotel1.weekendReg;
     }
-    public int bridgewoodRatesday(boolean isRewards,int weekdays,int weekends){
+    public int hotel2Ratesday(boolean isRewards,int weekdays,int weekends){
         if(isRewards)
-            return weekdays*bridgewood.weekdayRew+weekends*bridgewood.weekendRew;
+            return weekdays*hotel2.weekdayRew+weekends*hotel2.weekendRew;
         else
-            return weekdays*bridgewood.weekdayReg+weekends*bridgewood.weekendReg;
+            return weekdays*hotel2.weekdayReg+weekends*hotel2.weekendReg;
     }
-    public int ridgewoodRatesday(boolean isRewards,int weekdays,int weekends){
+    public int hotel3Ratesday(boolean isRewards,int weekdays,int weekends){
         if(isRewards)
-            return weekdays*ridgewood.weekdayRew+weekends*ridgewood.weekendRew;
+            return weekdays*hotel3.weekdayRew+weekends*hotel3.weekendRew;
         else
-            return weekdays*ridgewood.weekdayReg+weekends*ridgewood.weekendReg;
+            return weekdays*hotel3.weekdayReg+weekends*hotel3.weekendReg;
     }
 
     public String[] highestRatedHotel(Date start, Date end){
-        int weekdays=0,weekend=0;
-        Date count=start;
-        LocalDate localDate;
-        long difference = end.getTime()-start.getTime();
-        int numOfDays = (int) Math.floor(difference/(3600*24*1000));
-        for(int i=0;i<numOfDays;i++){
-            if(count.getDay()==6||count.getDay()==0){
-                weekend++;
-            }
-            else
-                weekdays++;
-            localDate = convertToLocalDateViaSqlDate(count).plusDays(1);
-            count=convertToDateViaSqlDate(localDate);
-        }
+        int[] days = getDays(start,end);
+
+        int weekdays = days[0];
+        int weekend = days[1];
 
         String[] output=new String[3];
-        if(ridgewood.getRating()>bridgewood.getRating()&&ridgewood.getRating()>lakewood.getRating()){
+        if(hotel3.getRating()>hotel2.getRating()&&hotel3.getRating()>hotel1.getRating()){
             output[0] = "Ridgewood";
-            output[1]=String.valueOf(ridgewood.rating);
-            output[2]=String.valueOf(ridgewoodRatesday(false,weekdays,weekend));
+            output[1]=String.valueOf(hotel3.rating);
+            output[2]=String.valueOf(hotel3Ratesday(false,weekdays,weekend));
             return output;
         }
-        else if(bridgewood.getRating()>lakewood.getRating()&&bridgewood.getRating()>ridgewood.getRating()) {
+        else if(hotel2.getRating()>hotel1.getRating()&&hotel2.getRating()>hotel3.getRating()) {
             output[0] = "Bridgewood";
-            output[1]=String.valueOf(bridgewood.rating);
-            output[2]=String.valueOf(bridgewoodRatesday(false,weekdays,weekend));
+            output[1]=String.valueOf(hotel2.rating);
+            output[2]=String.valueOf(hotel2Ratesday(false,weekdays,weekend));
             return output;
         }
         else {
             output[0] = "Lakewood";
-            output[1]=String.valueOf(lakewood.rating);
-            output[2]=String.valueOf(lakewoodRatesday(false,weekdays,weekend));
+            output[1]=String.valueOf(hotel1.rating);
+            output[2]=String.valueOf(hotel1Ratesday(false,weekdays,weekend));
             return output;
         }
     }
 
     //UC10 Best Rated Cheapest Hotel for Rewards Member
     public String[] lowestRateRewardsWeekdays(Date start, Date end){
+        int[] days=getDays(start,end);
+        int weekdays=days[0];
+        int weekend = days[1];
+        int hotel2_rates=hotel2Ratesday(true,weekdays,weekend);
+        int hotel1_rates=hotel1Ratesday(true,weekdays,weekend);
+        int hotel3_rates=hotel3Ratesday(true,weekdays,weekend);
+        String[] output = new String[3];
+        if(hotel3_rates<=hotel2_rates&&hotel3_rates<=hotel2_rates){
+            output[0] = "Ridgewood";
+            output[1]=String.valueOf(hotel3.rating);
+            output[2]=String.valueOf(hotel3_rates);
+            return output;
+
+        }
+        else if(hotel2_rates<=hotel1_rates&&hotel2_rates<=hotel3_rates) {
+            output[0] = "Bridgewood";
+            output[1]=String.valueOf(hotel2.rating);
+            output[2]=String.valueOf(hotel2_rates);
+            return output;
+        }
+        else {
+            output[0] = "Lakewood";
+            output[1]=String.valueOf(hotel1.rating);
+            output[2]=String.valueOf(hotel1_rates);
+            return output;
+        }
+    }
+
+    public Hotel cheapestHotelHighestRatingRewards(Date start, Date end){
+        int[] days = getDays(start,end);
+
+        int weekdays = days[0];
+        int weekend = days[1];
+        hotelArrayList.stream().forEach(hotel -> hotel.setRates(true, weekdays, weekend));
+
+        List<Hotel> list = hotelArrayList.stream().sorted((c1, c2)->Integer.compare(c1.getRates(), c2.getRates()))
+                .collect(Collectors.toList());
+        int min = list.get(0).getRates();
+        list = list.stream().filter(hotel -> hotel.getRates()==min)
+                .sorted((c1,c2)->Integer.compare(c2.getRating(),c1.getRating()))
+                .collect(Collectors.toList());
+        Hotel hotel = list.get(0);
+        System.out.println(hotel.getName() + ", Ratings : " + hotel.getRating() + ", Total Charges : " +
+                hotel.getRates());
+        return hotel;
+
+    }
+
+    public int[] getDays(Date start, Date end){
         int weekdays=0,weekend=0;
         Date count=start;
         LocalDate localDate;
@@ -216,28 +259,7 @@ public class UserInput {
             localDate = convertToLocalDateViaSqlDate(count).plusDays(1);
             count=convertToDateViaSqlDate(localDate);
         }
-        int bridgewood_rates=bridgewoodRatesday(true,weekdays,weekend);
-        int lakewood_rates=lakewoodRatesday(true,weekdays,weekend);
-        int ridgewood_rates=ridgewoodRatesday(true,weekdays,weekend);
-        String[] output = new String[3];
-        if(ridgewood_rates<=bridgewood_rates&&ridgewood_rates<=bridgewood_rates){
-            output[0] = "Ridgewood";
-            output[1]=String.valueOf(ridgewood.rating);
-            output[2]=String.valueOf(ridgewood_rates);
-            return output;
-
-        }
-        else if(bridgewood_rates<=lakewood_rates&&bridgewood_rates<=ridgewood_rates) {
-            output[0] = "Bridgewood";
-            output[1]=String.valueOf(bridgewood.rating);
-            output[2]=String.valueOf(bridgewood_rates);
-            return output;
-        }
-        else {
-            output[0] = "Lakewood";
-            output[1]=String.valueOf(lakewood.rating);
-            output[2]=String.valueOf(lakewood_rates);
-            return output;
-        }
+        int[] days = {weekdays,weekend};
+        return days;
     }
 }
