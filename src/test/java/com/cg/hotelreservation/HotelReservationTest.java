@@ -59,7 +59,7 @@ public class HotelReservationTest {
     }
 
     @Test
-    public void givenRange_shouldReturnCheapesHotel_whenCustomerIsRewardsMember() {
+    public void givenRange_shouldReturnCheapestHotel_whenCustomerIsRewardsMember() {
         UserInput userInput = new UserInput();
         Date start = userInput.returnStartDate("11sep2020");
         Date end = userInput.returnEndDate("12sep2020");
@@ -71,12 +71,22 @@ public class HotelReservationTest {
     }
 
     @Test
-    public void givenRange_shouldReturnHotel() {
+    public void givenRange_shouldReturnHotel_whenRewardsRegular() {
         UserInput userInput = new UserInput();
         Date start = userInput.returnStartDate("11sep2020");
         Date end = userInput.returnEndDate("12sep2020");
         userInput.addHotel();
         Hotel hotel = userInput.cheapestHotelHighestRatingRewards(start,end);
         Assert.assertEquals("Ridgewood",hotel.getName());
+    }
+
+    @Test
+    public void givenRange_shouldReturnHotel_whenRegularCustomer() {
+        UserInput userInput = new UserInput();
+        Date start = userInput.returnStartDate("11sep2020");
+        Date end = userInput.returnEndDate("12sep2020");
+        userInput.addHotel();
+        Hotel hotel = userInput.cheapestHotelHighestRatingRegular(start,end);
+        Assert.assertEquals("Lakewood",hotel.getName());
     }
 }

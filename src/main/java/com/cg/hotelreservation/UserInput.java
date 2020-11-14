@@ -262,4 +262,26 @@ public class UserInput {
         int[] days = {weekdays,weekend};
         return days;
     }
+
+    public Hotel cheapestHotelHighestRatingRegular(Date start, Date end){
+        int[] days = getDays(start,end);
+
+        int weekdays = days[0];
+        int weekend = days[1];
+        hotelArrayList.stream().forEach(hotel -> hotel.setRates(false, weekdays, weekend));
+
+        List<Hotel> list = hotelArrayList.stream().sorted((c1, c2)->Integer.compare(c1.getRates(), c2.getRates()))
+                .collect(Collectors.toList());
+        System.out.println(list);
+        int min = list.get(0).getRates();
+        list = list.stream().filter(hotel -> hotel.getRates()==min)
+                .sorted((c1,c2)->Integer.compare(c2.getRating(),c1.getRating()))
+                .collect(Collectors.toList());
+        System.out.println(list);
+        Hotel hotel = list.get(0);
+        System.out.println(hotel.getName() + ", Ratings : " + hotel.getRating() + ", Total Charges : " +
+                hotel.getRates());
+        return hotel;
+
+    }
 }
